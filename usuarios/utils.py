@@ -5,6 +5,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
+from .models import User
 
 def password_is_valid(request, password, confirm_password):
     
@@ -36,9 +37,11 @@ def password_is_valid(request, password, confirm_password):
 def username_is_valid(request, username):
     
     if len(username) == 0:
-        messages.add_message(request, constants.ERROR, 'Preencha o usuário')
+        messages.add_message(request, constants.ERROR, 'Preencha o usuário.')
         return False
-    
+    elif User.objects.filter(username=username).exists():
+        messages.add_message(request, constants.ERROR, 'Este nome de usuário já está sendo utilizado, tente outro.')
+        return False
     return True
 
 def email_is_valid(request, email):

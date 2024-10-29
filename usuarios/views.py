@@ -26,7 +26,7 @@ def cadastro(request):
         elif not email_is_valid(request, email):
             return redirect('/auth/cadastro')
         elif not username_is_valid(request, username):
-            return redirect('/auth/cadastro')
+            return redirect('/auth/cadastro')            
               
         try:
             user= User.objects.create_user(username=username,

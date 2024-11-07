@@ -4,7 +4,8 @@ from django.contrib.messages import constants
 from django.contrib import messages
 from . models import Pacientes, DadosPaciente
 from datetime import datetime
-
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 @login_required(login_url='/auth/logar/')
 def pacientes(request):
     if request.method == "GET":
@@ -97,3 +98,15 @@ def dados_paciente(request, id):
         messages.add_message(request, constants.SUCCESS, 'Dados cadastrado com sucesso')
 
         return redirect('dados_paciente_listar')
+    
+@login_required(login_url='/auth/logar/')
+@csrf_exempt
+def grafico_peso(request, id):
+    paciente = Pacientes.objects.get(id=id)
+    dados = DadosPaciente.objects.filter(paciente=paciente).order_by("data")
+    
+    pesos = [dado.peso for dado in dados]
+    labels = list(range(len(pesos)))
+    data = {'peso': pesos,
+            'labels': labels}
+    return JsonResponse(data)

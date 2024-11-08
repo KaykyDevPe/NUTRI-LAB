@@ -110,3 +110,20 @@ def grafico_peso(request, id):
     data = {'peso': pesos,
             'labels': labels}
     return JsonResponse(data)
+
+@login_required(login_url='/auth/logar')
+def plano_alimentar_listar(request):
+    if request.method == "GET":
+        pacientes = Pacientes.objects.filter(nutri=request.user)
+        return render(request, 'plano_alimentar_listar.html', {'pacientes': pacientes})
+    
+
+login_required(login_url='/auth/logar')
+def plano_alimentar(request, id):
+    paciente = get_object_or_404(Pacientes, id=id)
+    if not paciente.nutri == request.user:
+        messages.add_message(request, constants.ERROR, 'Esse paciente não é seu')
+        return redirect('/plano_alimentar_listar/')
+
+    if request.method == "GET":
+        return render(request, 'plano_alimentar.html', {'paciente': paciente})

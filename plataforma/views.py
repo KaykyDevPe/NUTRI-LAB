@@ -79,7 +79,7 @@ def dados_paciente(request, id):
         
         if (len(peso.strip()) == 0) or (len(altura.strip()) == 0) or (len(gordura.strip()) == 0) or (len(musculo.strip()) == 0) or (len(hdl.strip()) == 0) or (len(ldl.strip()) == 0) or (len(colesterol_total.strip()) == 0) or (len(triglicerídios.strip()) == 0):
             messages.add_message(request, constants.ERROR, 'Preencha todos os campos')
-            return redirect('dados_paciente_listar')
+            return redirect(f'/dados_paciente/{id}')
     
         
         paciente = DadosPaciente(paciente=paciente,
@@ -97,7 +97,7 @@ def dados_paciente(request, id):
 
         messages.add_message(request, constants.SUCCESS, 'Dados cadastrado com sucesso')
 
-        return redirect('dados_paciente_listar')
+        return redirect(f'/dados_paciente/{id}') 
     
 @login_required(login_url='/auth/logar/')
 @csrf_exempt
